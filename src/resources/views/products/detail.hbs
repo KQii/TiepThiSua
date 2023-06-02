@@ -1,0 +1,76 @@
+{{!-- <h1>{{this.MASP}}</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mã sản phẩm</th>
+      <th>Danh mục</th>
+      <th>Tên sản phẩm</th>
+      <th>Giá bán</th>
+      <th>Số lượng</th>
+      <th>Nhà sản xuất</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#with product.[0]}}
+    <tr>
+      <td>{{this.MASP}}</td>
+      <td>{{this.MALOAI}}</td>
+      <td>{{this.TENSP}}</td>
+      <td>{{this.GIABAN}}</td>
+      <td>{{this.TON}}</td>
+      <td>{{this.NSX}}</td>
+    </tr>
+    {{/with}}
+  </tbody>
+</table> --}}
+
+
+<div class="mt-2">
+  <div class="row">
+    <div class="col-lg-3">
+      <nav> <span>DANH MỤC SẢN PHẨM</span>
+        <ul>
+          <li><a href="/category/3">Sữa hộp</a></li>
+          <li><a href="/category/">Sữa chua</a></li>
+          <li><a href="/category/1">Sữa đặc</a></li>
+          <li><a href="/category/2">Sữa bột</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="col-lg-9 productname">
+      <div class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>></span>
+        <a href="/sua-tuoi">{{product.[0].TENLOAI}}</a>
+        {{!-- <span>></span>
+        <a href="/sua-tuoi-dutch-lady">Sữa tươi Dutch Lady</a> --}}
+      </div>
+
+
+      <div class="product-detail-container">
+        <div class="product-image">
+          <img src="{{product.[0].HINHANH}}" alt="" width="470" height="360">
+        </div>
+
+        <div class="product-info">
+          <h3>{{product.[0].TENSP}}</h3>
+
+          <div class="expireddate">
+            <div class="box-expire"><span>HSD trên 12 tháng kể từ NSX</span></div>
+          </div>
+
+          <div class="ratinglist-price">
+            <div class="boxprice"><strong>{{product.[0].GIABAN}}đ</strong>
+              {{!-- <span class="strike">172.000₫</span> <label>-33%</label> --}}
+            </div>
+          </div>
+
+          <a href="" class="choosebuy detailbuy">Thêm vào giỏ hàng</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

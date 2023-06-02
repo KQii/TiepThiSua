@@ -1,0 +1,175 @@
+<form class="mt-4" name="container-form" method="POST" action="/category/handle-form-delete-actions">
+  <div>
+    <h3>Danh mục sản phẩm</h3>
+    <a href="/category/create">Tạo danh mục mới</a>
+
+    <div class="mt-4 d-flex align-items-center">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+        <label class="form-check-label" for="checkbox-all">
+          Chọn tất cả
+        </label>
+      </div>
+
+      <select class="form-control form-control-sm checkbox-select-all-options" name="action" required="required">
+        <option value="">-- Chọn hành động --</option>
+        <option value="delete">Xóa</option>
+      </select>
+
+      <button class="btn btn-primary btn-sm btn-check-all-submit disabled" data-target="#delete-category-modal">Áp dụng</button>
+    </div>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">STT</th>
+        <th scope="col">
+          Mã loại
+          {{{sortable 'MALOAI' _sort}}}
+        </th>
+        <th scope="col">
+          Tên loại
+          {{{sortable 'TENLOAI' _sort}}}
+        </th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each categories}}
+      <tr>
+        <td>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="categoryIds[]" value="{{this.MALOAI}}">
+          </div>
+        </td>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.MALOAI}}</td>
+        <td>{{this.TENLOAI}}</td>
+        <td>
+          <a href="/category/{{this.MALOAI}}/edit" class="btn btn-link">Sửa</a>
+          <a href="#" class="btn btn-link" data-toggle="modal" data-id="{{this.MALOAI}}"
+            data-target="#delete-category-modal">Xóa</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Bạn chưa danh mục sản phẩm nào!
+          <a href="/category/create">Tạo danh mục mới</a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="goToPage('previous')">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(1)">1</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(2)">2</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(3)">3</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(4)">4</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(5)">5</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(6)">6</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next" onclick="goToPage('next')">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</form>
+
+{{!-- Delete hidden form --}}
+<form name="delete-category-form" method="POST"></form>
+
+{{!-- Confirm delete category --}}
+<div class="modal fade" id="delete-category-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa danh mục</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn chắc chắn xóa danh mục này chứ? Những sản phẩm thuộc danh mục này cũng sẽ bị xóa theo.
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-category" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var categoryId;
+    var deleteForm = document.forms['delete-category-form'];
+    var btnDeleteCategory = document.getElementById('btn-delete-category');
+    var containerForm = $('form[name="container-form"]');
+    var checkboxAll = $('#checkbox-all');
+    var categoryItemCheckbox = $('input[name="categoryIds[]"]');
+    var checkAllSubmitBtn = $('.btn-check-all-submit')
+
+    // When dialog confirm show
+    $('#delete-category-modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      // Send data with the button when clicked
+      categoryId = button.data('id');
+    });
+
+    // When click delete button
+    btnDeleteCategory.onclick = function() {
+      deleteForm.action = '/category/' + categoryId + '?_method=DELETE';
+      deleteForm.submit();
+    }
+
+    // Checkbox all clicked
+    checkboxAll.change(function () {
+      // When this checkbox tick
+      var isCheckedAll = $(this).prop('checked');
+      categoryItemCheckbox.prop('checked', isCheckedAll);
+      renderCheckAllSubmitBtn();
+    })
+
+    // Check all submit button clicked
+    containerForm.on('submit', function (event) {
+      var isSubmittable = !checkAllSubmitBtn.hasClass('disabled')
+      if (!isSubmittable) {
+        event.preventDefault();
+      }
+    })
+
+    // Category item checkbox changed
+    categoryItemCheckbox.change(function () {
+      // Compare all checkbox with the checkbox ticked
+      var isCheckedAll = categoryItemCheckbox.length === $('input[name="categoryIds[]"]:checked').length;
+      // If all checkbox ticked, tick the checkboxAll
+      checkboxAll.prop('checked', isCheckedAll)
+      renderCheckAllSubmitBtn();
+    })
+
+    // Re-render check all submit button
+    function renderCheckAllSubmitBtn() {
+      // Count the checkbox ticked
+      var checkedCount = $('input[name="categoryIds[]"]:checked').length;
+      if (checkedCount > 0) {
+        checkAllSubmitBtn.removeClass('disabled', false);
+      } else {
+        checkAllSubmitBtn.addClass('disabled', true);
+      }
+    }
+  })
+</script>

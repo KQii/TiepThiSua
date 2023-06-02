@@ -1,0 +1,85 @@
+<form class="mt-4" method="POST" action="/products/add-item">
+  <div class="mt-4">
+    <h3>Nhập hàng</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="table" id="dataTable">
+      <thead>
+        <tr>
+          <th>Tên sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Giá vốn</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <select class="form-control" id="masp[]" name="masp[]" required="required">
+              <option value="">-- Chọn sản phẩm --</option>
+              {{#each product}}
+              <option value="{{MASP}}">{{MASP}}- {{TENSP}}</option>
+              {{/each}}
+            </select>
+          </td>
+          <td><input type="text" name="soluong[]" class="form-control" /></td>
+          <td><input type="text" name="giavon[]" class="form-control" /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="addRow()">Thêm sản phẩm</button>
+  <button type="submit" class="btn btn-primary" id="submitButton" disabled>Xác nhận</button>
+</form>
+
+<script>
+  // Lấy tham chiếu đến các ô input trong các dòng có lớp CSS 'input-row'
+  var inputsContainer = document.getElementById('dataTable');
+  var submitButton = document.getElementById('submitButton');
+
+  // Xác định hàm kiểm tra tất cả các ô có giá trị hay không
+  function checkInputs() {
+    var inputs = inputsContainer.querySelectorAll('.input-row input[name="soluong[]"], .input-row input[name="giavon[]"]');
+    var allInputsFilled = true;
+
+    inputs.forEach(function (input) {
+      if (input.value === '') {
+        allInputsFilled = false;
+        return;
+      }
+    });
+
+    // Kích hoạt hoặc vô hiệu hóa nút xác nhận dựa trên kết quả kiểm tra
+    submitButton.disabled = !allInputsFilled;
+  }
+
+  // Gắn sự kiện lắng nghe sự thay đổi giá trị trong các ô input
+  inputsContainer.addEventListener('input', checkInputs);
+
+  // Hàm thêm sản phẩm
+  function addRow() {
+    var table = document.getElementById("dataTable");
+    var row = table.insertRow();
+    row.classList.add('input-row');
+
+    var cell1 = row.insertCell();
+    var cell2 = row.insertCell();
+    var cell3 = row.insertCell();
+
+    var selectHTML = '<select class="form-control" name="masp[]" required>'
+      + '<option value="">-- Chọn sản phẩm --</option>'
+      + '{{#each product}}'
+      + '<option value="{{MASP}}">{{MASP}}- {{TENSP}}</option>'
+      + '{{/each}}'
+      + '</select>';
+
+    cell1.innerHTML = selectHTML;
+    cell2.innerHTML = '<input type="text" name="soluong[]" class="form-control" />';
+    cell3.innerHTML = '<input type="text" name="giavon[]" class="form-control" />';
+
+    // Gắn sự kiện lắng nghe sự thay đổi giá trị trong các ô input mới
+    var inputs = row.querySelectorAll('input[name="soluong[]"], input[name="giavon[]"]');
+    inputs.forEach(function (input) {
+      input.addEventListener('input', checkInputs);
+    });
+  }
+</script>

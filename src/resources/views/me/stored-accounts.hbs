@@ -1,0 +1,183 @@
+<form class="mt-4" name="container-form" method="POST" action="/account/handle-form-delete-actions">
+  <div>
+    <h3>Danh sách tài khoản</h3>
+    <a href="">Tạo tài khoản</a>
+
+    <div class="mt-4 d-flex align-items-center">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+        <label class="form-check-label" for="checkbox-all">
+          Chọn tất cả
+        </label>
+      </div>
+
+      <select class="form-control form-control-sm checkbox-select-all-options" name="action" required>
+        <option value="">-- Chọn hành động --</option>
+        <option value="delete">Xóa</option>
+      </select>
+
+      <button class="btn btn-primary btn-sm btn-check-all-submit disabled">Áp dụng</button>
+    </div>
+  </div>
+
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">STT</th>
+        <th scope="col">
+          Tên tài khoản
+          {{{sortable 'TENTK' _sort}}}
+        </th>
+        <th scope="col">
+          Mật khẩu
+          {{{sortable 'MATKHAU' _sort}}}
+        </th>
+        <th scope="col">
+          Trạng thái
+          {{{sortable 'TRANGTHAI' _sort}}}
+        </th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each accounts}}
+      <tr>
+        <td>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="accountIds[]" value="{{this.TENTK}}">
+          </div>
+        </td>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.TENTK}}</td>
+        <td>{{this.MATKHAU}}</td>
+        <td>{{this.TRANGTHAI}}</td>
+        <td>
+          <a href="/me/stored/customers?account={{this.TENTK}}" class="btn btn-link btn-restore" data-id="{{this.TENTK}}">Chi tiết khách hàng</a>
+          <a href="#" class="btn btn-link" data-toggle="modal" data-id="{{this.TENTK}}"
+            data-target="#delete-account-modal">Xóa</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Chưa có tài khoản nào!
+          <a href="">Tạo tài khoản mới</a>
+        </td>
+      </tr>
+
+      {{/each}}
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="goToPage('previous')">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(1)">1</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(2)">2</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(3)">3</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(4)">4</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(5)">5</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(6)">6</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next" onclick="goToPage('next')">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</form>
+
+{{!-- Delete hidden form --}}
+<form name="delete-account-form" method="POST"></form>
+
+{{!-- Confirm delete account --}}
+<div class="modal fade" id="delete-account-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa tài khoản</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn chắc chắn xóa tài khoản này chứ?
+        Thông tin của khách hàng dùng tài khoản này cũng sẽ bị xóa.
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-account" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var accountId;
+    var deleteForm = document.forms['delete-account-form'];
+    var btnDeleteaccount = document.getElementById('btn-delete-account');
+    var containerForm = $('form[name="container-form"]');
+    var checkboxAll = $('#checkbox-all');
+    var accountItemCheckbox = $('input[name="accountIds[]"]');
+    var checkAllSubmitBtn = $('.btn-check-all-submit')
+
+    // When dialog confirm show
+    $('#delete-account-modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      // Send data with the button when clicked
+      accountId = button.data('id');
+    });
+
+    // When click delete button
+    btnDeleteaccount.onclick = function() {
+      deleteForm.action = '/account/' + accountId + '?_method=DELETE';
+      deleteForm.submit();
+    }
+
+    // Checkbox all clicked
+    checkboxAll.change(function () {
+      // When this checkbox tick
+      var isCheckedAll = $(this).prop('checked');
+      accountItemCheckbox.prop('checked', isCheckedAll);
+      renderCheckAllSubmitBtn();
+    })
+
+    // Check all submit button clicked
+    containerForm.on('submit', function (event) {
+      var isSubmittable = !checkAllSubmitBtn.hasClass('disabled')
+      if (!isSubmittable) {
+        event.preventDefault();
+      }
+    })
+
+    // account item checkbox changed
+    accountItemCheckbox.change(function () {
+      // Compare all checkbox with the checkbox ticked
+      var isCheckedAll = accountItemCheckbox.length === $('input[name="accountIds[]"]:checked').length;
+      // If all checkbox ticked, tick the checkboxAll
+      checkboxAll.prop('checked', isCheckedAll)
+      renderCheckAllSubmitBtn();
+    })
+
+    // Re-render check all submit button
+    function renderCheckAllSubmitBtn() {
+      // Count the checkbox ticked
+      var checkedCount = $('input[name="accountIds[]"]:checked').length;
+      if (checkedCount > 0) {
+        checkAllSubmitBtn.removeClass('disabled', false);
+      } else {
+        checkAllSubmitBtn.addClass('disabled', true);
+      }
+    }
+  })
+</script>

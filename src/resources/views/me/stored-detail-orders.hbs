@@ -1,0 +1,55 @@
+<form class="mt-4" name="container-form" method="POST" action="">
+  <div>
+    <h3>Chi tiết đơn hàng</h3>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">
+          Mã sản phẩm
+          {{{sortable 'MASP' _sort}}}
+        </th>
+        <th scope="col">
+          Tên sản phẩm
+          {{{sortable 'TENSP' _sort}}}
+        </th>
+        <th scope="col">
+          Số lượng
+          {{{sortable 'SOLUONG' _sort}}}
+        </th>
+        <th scope="col">
+          Giá bán
+          {{{sortable 'GIABAN' _sort}}}
+        </th>
+        <th scope="col">
+          Thành tiền
+          {{{sortable 'THANHTIEN' _sort}}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each detailOrders}}
+      <tr>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.MASP}}</td>
+        <td>{{this.TENSP}}</td>
+        <td>{{this.SOLUONG}}</td>
+        <td>{{this.GIABAN}}</td>
+        <td>{{this.THANHTIEN}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Chưa có đơn hàng nào được tạo!
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div>
+    <h4 style="display: inline-block;">Tổng tiền: {{sumByField detailOrders 'THANHTIEN'}}</h4>
+  </div>
+</form>

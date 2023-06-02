@@ -1,0 +1,260 @@
+<form class="mt-4" name="container-form" method="POST" action="/products/handle-form-restore-actions">
+  <div>
+    <h3>Sản phẩm đã xóa</h3>
+    <a href="/me/stored/products">Danh sách sản phẩm</a>
+
+    <div class="mt-4 d-flex align-items-center">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+        <label class="form-check-label" for="checkbox-all">
+          Chọn tất cả
+        </label>
+      </div>
+
+      <select class="form-control form-control-sm checkbox-select-all-options" name="action" required>
+        <option value="">-- Chọn hành động --</option>
+        <option value="restore">Khôi phục</option>
+      </select>
+
+      <button class="btn btn-primary btn-sm btn-check-all-submit disabled">Áp dụng</button>
+    </div>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">STT</th>
+        <th scope="col">
+          Mã sản phẩm
+          {{{sortable 'MASP' _sort}}}
+        </th>
+        <th scope="col">
+          Mã loại
+          {{{sortable 'MALOAI' _sort}}}
+        </th>
+        <th scope="col">
+          Tên sản phẩm
+          {{{sortable 'TENSP' _sort}}}
+        </th>
+        <th scope="col">
+          Giá bán
+          {{{sortable 'GIABAN' _sort}}}
+        </th>
+        <th scope="col">
+          Tồn kho
+          {{{sortable 'TON' _sort}}}
+        </th>
+        <th scope="col">
+          NSX
+          {{{sortable 'NSX' _sort}}}
+        </th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+      <tr>
+        <td>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="productIds[]" value="{{this.MASP}}">
+          </div>
+        </td>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.MASP}}</td>
+        <td>{{this.MALOAI}}</td>
+        <td>{{this.TENSP}}</td>
+        <td>{{this.GIABAN}}</td>
+        <td>{{this.TON}}</td>
+        <td>{{this.NSX}}</td>
+        <td>
+          <a href="" class="btn btn-link btn-restore" data-id="{{this.MASP}}">Khôi phục</a>
+          <a href="#" class="btn btn-link" data-toggle="modal" data-id="{{this.MASP}}"
+            data-target="#delete-product-modal">Xóa vĩnh viễn</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Chưa có sản phẩm nào!
+          <a href="/me/stored/products">Danh sách sản phẩm</a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="goToPage('previous')">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(1)">1</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(2)">2</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(3)">3</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(4)">4</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(5)">5</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(6)">6</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next" onclick="goToPage('next')">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</form>
+
+{{!-- Delete hidden form --}}
+<form name="delete-product-form" method="POST"></form>
+<form name="restore-product-form" method="POST">
+  <input type="hidden" name="MASP" value="">
+</form>
+
+{{!-- Confirm delete product --}}
+<div class="modal fade" id="delete-product-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa sản phẩm</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn chắc chắn xóa sản phẩm này vĩnh viễn chứ? Hành động này không thể khôi phục.
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-product" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var productId;
+    var deleteForm = document.forms['delete-product-form'];
+    var containerForm = document.forms['container-form'];
+    var restoreForm = document.forms['restore-product-form'];
+    var btnDeleteProduct = document.getElementById('btn-delete-product');
+    var checkboxAll = $('#checkbox-all');
+    var productItemCheckbox = $('input[name="productIds[]"]');
+    var checkAllSubmitBtn = $('.btn-check-all-submit')
+    var restoreBtn = $('.btn-restore');
+
+    // When dialog confirm show
+    $('#delete-product-modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      productId = button.data('id');
+    })
+
+    // When delete product button clicked
+    btnDeleteProduct.onclick = function () {
+      deleteForm.action = '/products/' + productId + '?_method=DELETE';
+      deleteForm.submit();
+    }
+
+    // When restore product button clicked
+    restoreBtn.click(function (event) {
+      event.preventDefault();
+
+      var productId = $(this).data('id');
+      restoreForm.action = '/products/' + productId + '/restore?_method=PATCH';
+      restoreForm.elements['MASP'].value = productId;
+      //restoreForm.elements['DAXOA'].value = 0;//
+      restoreForm.submit();
+
+    })
+
+    // Checkbox all clicked
+    checkboxAll.change(function () {
+      var isCheckedAll = $(this).prop('checked');
+      productItemCheckbox.prop('checked', isCheckedAll);
+      renderCheckAllSubmitBtn();
+    })
+
+    // Check all submit button clicked
+    checkAllSubmitBtn.on('submit', function (event) {
+      var isSubmittable = !$(this).hasClass('disabled')
+
+      if (!isSubmittable) {
+        event.preventDefault();
+      }
+    })
+
+    // Product item checkbox changed
+    productItemCheckbox.change(function () {
+      var isCheckedAll = productItemCheckbox.length === $('input[name="productIds[]"]:checked').length;
+      checkboxAll.prop('checked', isCheckedAll)
+      renderCheckAllSubmitBtn();
+    })
+
+    // Re-render check all submit button
+    function renderCheckAllSubmitBtn() {
+      var checkedCount = $('input[name="productIds[]"]:checked').length;
+      if (checkedCount > 0) {
+        checkAllSubmitBtn.removeClass('disabled');
+      } else {
+        checkAllSubmitBtn.addClass('disabled');
+      }
+    }
+  });
+
+  function goToPage(page) {
+    var currentUrl = window.location.href;
+    var newUrl;
+
+    if (page === 'previous') {
+      // Xử lý trang trước đó
+      newUrl = getPreviousPageUrl(currentUrl);
+    } else if (page === 'next') {
+      // Xử lý trang kế tiếp
+      newUrl = getNextPageUrl(currentUrl);
+    } else {
+      // Xử lý trang cụ thể
+      newUrl = getPageUrl(currentUrl, page);
+    }
+
+    window.location.href = newUrl;
+  }
+
+  function getPreviousPageUrl(currentUrl) {
+    // Xử lý URL để lấy trang trước đó
+    // Ví dụ: https://example.com?page=2 => https://example.com?page=1
+    var url = new URL(currentUrl);
+    var searchParams = new URLSearchParams(url.search);
+    var currentPage = parseInt(searchParams.get('page')) || 1;
+    var previousPage = Math.max(currentPage - 1, 1);
+    searchParams.set('page', previousPage.toString());
+    url.search = searchParams.toString();
+    return url.toString();
+  }
+
+  function getNextPageUrl(currentUrl) {
+    // Xử lý URL để lấy trang kế tiếp
+    // Ví dụ: https://example.com?page=2 => https://example.com?page=3
+    var url = new URL(currentUrl);
+    var searchParams = new URLSearchParams(url.search);
+    var currentPage = parseInt(searchParams.get('page')) || 1;
+    var nextPage = currentPage + 1;
+    searchParams.set('page', nextPage.toString());
+    url.search = searchParams.toString();
+    return url.toString();
+  }
+
+  function getPageUrl(currentUrl, page) {
+    // Xử lý URL để lấy trang cụ thể
+    // Ví dụ: https://example.com?page=1 => https://example.com?page=2
+    var url = new URL(currentUrl);
+    var searchParams = new URLSearchParams(url.search);
+    searchParams.set('page', page.toString());
+    url.search = searchParams.toString();
+    return url.toString();
+  }
+</script>

@@ -1,0 +1,64 @@
+<form class="mt-4" name="container-form" method="POST" action="">
+  <div>
+    <h3>Danh sách phiếu nhập</h3>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">
+          Mã phiếu nhập
+          {{{sortable 'MAPN' _sort}}}
+        </th>
+        <th scope="col">
+          Ngày tạo
+          {{{sortable 'THOIGIAN' _sort}}}
+        </th>
+        <th scope="col" colspan="1"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each receipts}}
+      <tr>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.MAPN}}</td>
+        <td>{{this.THOIGIAN}}</td>
+        <td>
+          <a href="/me/stored/receipts/{{this.MAPN}}" class="btn btn-link">Chi tiết phiếu nhập</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Chưa có đơn hàng nào được tạo!
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="goToPage('previous')">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(1)">1</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(2)">2</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(3)">3</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(4)">4</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(5)">5</a></li>
+      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(6)">6</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next" onclick="goToPage('next')">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</form>

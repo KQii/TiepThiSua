@@ -1,0 +1,15 @@
+<div class="mt-4">
+    <h3>Cập nhật danh mục</h3>
+
+    <form class="mt-4" method="POST" action="/category/{{category.[0].MALOAI}}?_method=PUT">
+        <div class="form-group">
+            <label for="TENLOAI">Tên danh mục</label>
+            <input type="text" class="form-control" value="{{category.[0].TENLOAI}}" id="TENLOAI" name="TENLOAI"
+                placeholder="Nhập tên danh mục">
+        </div>
+
+        <input type="hidden" name="MALOAI" value="{{category.[0].MALOAI}}">
+
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </form>
+</div>

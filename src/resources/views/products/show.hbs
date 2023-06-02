@@ -1,0 +1,50 @@
+<h1>Sản phẩm</h1>
+
+<div class='mt-4'>
+  <div class='row'>
+
+    {{#each product}}
+      <div class='col-sm-6 col-lg-3'>
+        <div class='card card-product-item'>
+          <a href="/products/{{this.MASP}}">
+            <img class='card-img-top' src='{{this.HINHANH}}' alt='Card image cap' />
+          </a>
+            <div class='card-body'>
+              <a href="/products/{{this.MASP}}">
+                <h5 class='card-title'>{{this.TENSP}}</h5>
+              </a>
+              <p class='card-text'>{{this.MOTA}}</p>
+              <a href='#' class='btn btn-primary'>Thêm vào giỏ hàng</a>
+            </div>
+        </div>  
+      </div>
+    {{/each}}
+
+  </div>
+</div>
+
+
+{{!-- <table>
+  <thead>
+    <tr>
+      <th>Mã sản phẩm</th>
+      <th>Danh mục</th>
+      <th>Tên sản phẩm</th>
+      <th>Giá bán</th>
+      <th>Số lượng</th>
+      <th>Nhà sản xuất</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each products}}
+      <tr>
+        <td>{{this.MASP}}</td>
+        <td>{{this.MALOAI}}</td>
+        <td>{{this.TENSP}}</td>
+        <td>{{this.GIABAN}}</td>
+        <td>{{this.TON}}</td>
+        <td>{{this.NSX}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table> --}}
