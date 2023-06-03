@@ -14,7 +14,7 @@ function route(app) {
 
     app.use('/category', categoryRouter);
 
-    app.use('/account/', accountRouter)
+    app.use('/account', accountRouter)
 
     app.use('/', siteRouter);
 }
