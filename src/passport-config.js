@@ -2,10 +2,6 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const Account = require('../app/models/Account');
 
-async function getUserByPhonenumber(phonenumber) {
-
-}
-
 function initialize(passport, getUserByphonenumber) {
     // Function to authenticate users
     const authenticateUsers = async (phonenumber, password, done) => {

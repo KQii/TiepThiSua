@@ -15,5 +15,6 @@ router.get('/trash/products', meController.trashProducts);
 router.get('/add-item', meController.addItem);
 router.get('/change-price/:MASP', meController.priceHistory);
 router.get('/change-price', meController.changePrice);
+router.get('/report', meController.report);
 
 module.exports = router;

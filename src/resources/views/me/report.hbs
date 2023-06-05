@@ -1,0 +1,50 @@
+<form class="mt-4" name="container-form" method="POST" action="">
+  <div>
+    <h3>Báo cáo doanh thu và lợi nhuận</h3>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">
+          Ngày bắt đầu
+        </th>
+        <th scope="col">
+          Ngày kết thúc
+        </th>
+        <th scope="col">
+          Doanh thu
+        </th>
+        <th scope="col">
+          Tổng vốn
+        </th>
+        <th scope="col">
+          Lợi nhuận
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each orders}}
+      <tr>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.MADH}}</td>
+        <td>{{this.MAKH}}</td>
+        <td>{{this.NGAYDH}}</td>
+        <td>{{this.DIACHI}}</td>
+        <td>{{this.TRANGTHAI}}</td>
+        <td>{{this.TONGTIEN}}</td>
+        <td>
+          <a href="/me/stored/orders/{{this.MADH}}" class="btn btn-link">Chi tiết đơn hàng</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Chưa có đơn hàng nào được tạo!
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+</form>

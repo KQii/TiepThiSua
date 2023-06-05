@@ -5,6 +5,7 @@ const Order = require('../models/Order');
 const Category = require('../models/Category');
 const Receipt = require('../models/Receipt');
 const History = require('../models/History');
+const Report = require('../models/Report');
 
 class MeController {
     
@@ -127,6 +128,16 @@ class MeController {
             const MASP = req.params.MASP;
             const history = await History.getPriceHistory(MASP);
             res.render('me/price-history', { history });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    // [GET] me/report
+    async report(req, res, next) {
+        try {
+            const report = await Report.getReport();
+            res.render('me/report', { report });
         } catch (err) {
             next(err);
         }
