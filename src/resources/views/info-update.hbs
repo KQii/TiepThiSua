@@ -18,15 +18,16 @@
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
-                            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
-                            <form>
+                            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Cập nhật thông tin</h3>
+                            <form method="POST" action="/info-update">
+                                <input type="hidden" name="sdt1" value="{{SDT1}}">
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="text" id="lastName" name="lastName" class="form-control form-control-lg" placeholder="Nhập họ" />
-                                            <label class="form-label" for="lastName">Họ</label>
+                                            <input type="text" id="lastname" name="lastname" class="form-control form-control-lg" placeholder="Nhập họ" />
+                                            <label class="form-label" for="lastname">Họ</label>
                                         </div>
 
                                     </div>
@@ -34,8 +35,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="text" id="firstName" name="firstName" class="form-control form-control-lg" placeholder="Nhập tên" />
-                                            <label class="form-label" for="firstName">Tên</label>
+                                            <input type="text" id="firstname" name="firstname" class="form-control form-control-lg" placeholder="Nhập tên" />
+                                            <label class="form-label" for="firstname">Tên</label>
                                         </div>
 
                                     </div>
@@ -45,7 +46,7 @@
                                     <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                         <div class="form-outline datepicker w-100">
-                                            <input type="date" class="form-control form-control-lg" id="birthdayDate" name="birthdayDate" pattern="\d{4}-\d{2}-\d{2}" required />
+                                            <input type="date" class="form-control form-control-lg" id="birthdaydate" name="birthdaydate" pattern="\d{4}-\d{2}-\d{2}" required />
                                             <label for="birthdayDate" class="form-label">Ngày sinh</label>
                                         </div>
 
@@ -56,20 +57,20 @@
 
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                id="femaleGender" value="option1" checked />
+                                                id="femaleGender" value="Nữ" checked />
                                             <label class="form-check-label" for="femaleGender">Nữ</label>
                                         </div>
 
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                id="maleGender" value="option2" />
+                                                id="maleGender" value="Nam" />
                                             <label class="form-check-label" for="maleGender">Nam</label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6 mb-4 pb-2">
+                                    <div class="col">
 
                                         <div class="form-outline">
                                             <input type="email" id="email" name="email"
@@ -78,27 +79,12 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline">
-                                            <input type="tel" id="phoneNumber" name="phonenumber" class="form-control form-control-lg" />
-                                            <label class="form-label" for="phoneNumber">Số điện thoại</label>
-                                        </div>
-
-                                    </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12">
-
-                                        <select class="select form-control-lg">
-                                            <option value="1" disabled>Choose option</option>
-                                            <option value="2">Subject 1</option>
-                                            <option value="3">Subject 2</option>
-                                            <option value="4">Subject 3</option>
-                                        </select>
-                                        <label class="form-label select-label">Choose option</label>
-
+                                    <div class="col">
+                                        <input type="text" name="address" class="form-control form-control-lg" />
+                                        <label class="form-label" for="address">Địa chỉ</label>
                                     </div>
                                 </div>
 

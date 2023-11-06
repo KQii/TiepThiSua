@@ -1,0 +1,78 @@
+<div class="mt-4">
+    <div class="row">
+        <div class="col">
+            <h3>MilkyWay</h3>
+        </div>
+        <div class="col">
+            <p><b>Mã đơn hàng: {{detailOrders.[0].MADH}}</b></p>
+            <p><b>Ngày đặt hàng: {{detailOrders.[0].NGAYDH}}</b></p>
+        </div>
+    </div>
+    <hr class="border-top">
+    <div class="row">
+        <div class="col">
+            <h5>Từ:</h5>
+            <p>MilkyWay - Trang web cung cấp sữa giá rẻ nhất VN <br></p>
+            <p><b>Địa chỉ: </b>Xã Bình Hưng, Huyện Bình Chánh <br></p>
+            <p><b>SDT: </b>0766132700</p>
+        </div>
+        <div class="col">
+            <h5>Đến:</h5>
+            <p>{{detailOrders.[0].HO}} {{detailOrders.[0].TEN}}<br></p>
+            <p><b>Địa chỉ: </b>{{detailOrders.[0].DIACHI}}<br></p>
+            <p><b>SDT: </b>{{detailOrders.[0].SDT1}}</p>
+        </div>
+    </div>
+    <hr class="border-top">
+    <div class="row">
+        <div class="col">
+            <h5>Nội dung hàng (Tổng số lượng sản phẩm: {{sumByField detailOrders 'SOLUONG'}})</h5>
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">
+                            Tên sản phẩm
+                        </th>
+                        <th scope="col">
+                            Số lượng
+                        </th>
+                        <th scope="col">
+                            Giá bán
+                        </th>
+                        <th scope="col">
+                            Thành tiền
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each detailOrders}}
+                    <tr>
+                        <th scope="row">{{sum @index 1}}</th>
+                        <td>{{this.TENSP}}</td>
+                        <td>{{this.SOLUONG}}</td>
+                        <td>{{this.GIABAN}}</td>
+                        <td>{{this.THANHTIEN}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-right" style="font-size: large;"><b>Tổng cộng:</b></td>
+                        <td id="total" class="text-bold">{{detailOrders.[0].TONGTIEN}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p><b>Phương thức thanh toán: </b>Thanh toán khi nhận hàng</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <p>Hãy chuẩn bị trước {{detailOrders.[0].TONGTIEN}} VND để thanh toán. Xin cảm ơn quý khách đã mua hàng tại MilkyWay</p>
+        </div>
+    </div>
+</div>

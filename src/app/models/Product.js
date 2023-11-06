@@ -52,21 +52,8 @@ class Product {
     }
 
     async getAllRemainProducts(reqQuery) {
-        var page = reqQuery.page || 1;
-        page = parseInt(page);
-        var skip = (page - 1) * PAGE_SIZE;
-        var limit = PAGE_SIZE;
-
         let query = `
-            SELECT *
-            FROM (
-            SELECT *,
-            ROW_NUMBER() OVER (ORDER BY MASP) AS RowNum
-            FROM SANPHAM
-            WHERE DAXOA = 0
-            ) AS SortedData
-            WHERE RowNum > ${skip}
-            AND RowNum <= ${skip + limit}
+            SELECT * FROM SANPHAM WHERE DAXOA = 0
         `;
 
         if (reqQuery.hasOwnProperty('_sort')) {
@@ -83,21 +70,9 @@ class Product {
     }
 
     async getAllDeletedProducts(reqQuery) {
-        var page = reqQuery.page || 1;
-        page = parseInt(page);
-        var skip = (page - 1) * PAGE_SIZE;
-        var limit = PAGE_SIZE;
 
         let query = `
-            SELECT *
-            FROM (
-            SELECT *,
-            ROW_NUMBER() OVER (ORDER BY MASP) AS RowNum
-            FROM SANPHAM
-            WHERE DAXOA = 1
-            ) AS SortedData
-            WHERE RowNum > ${skip}
-            AND RowNum <= ${skip + limit}
+            SELECT * FROM SANPHAM WHERE DAXOA = 1
         `;
 
         if (reqQuery.hasOwnProperty('_sort')) {

@@ -1,0 +1,43 @@
+<form class="mt-4" name="container-form" method="POST" action="/me/report">
+  <div>
+    <h3>Báo cáo doanh thu và lợi nhuận</h3>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="startdate">Ngày bắt đầu</label>
+              <input type="date" class="form-control" id="startdate" name="startdate">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="enddate">Ngày kết thúc</label>
+              <input type="date" class="form-control" id="enddate" name="enddate">
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitButton">Xác nhận</button>
+        <div class="table-responsive">
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Ngày bắt đầu</th>
+                <th scope="col">Ngày kết thúc</th>
+                <th scope="col">Doanh thu</th>
+                <th scope="col">Tổng vốn</th>
+                <th scope="col">Lợi nhuận</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

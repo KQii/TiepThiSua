@@ -71,5 +71,7 @@ module.exports = {
 
         return new Handlebars.SafeString(output);
     },
-    Handlebars,
+    ifOrCond: (v1, v2) => {
+        return v1 || v2;
+    }
 }

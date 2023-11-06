@@ -30,10 +30,16 @@ class Receipt {
         }
     }
 
-    async getReceipts() {
+    async getReceipts(reqQuery) {
         try {
+            let query = `SELECT * FROM PHIEUNHAP`;
+
+            if (reqQuery.hasOwnProperty('_sort')) {
+                query += ` ORDER BY ${reqQuery.column} ${reqQuery.type}`;
+            }
+
             let pool = await sql.connect(config);
-            let res = await pool.request().query(`SELECT * FROM PHIEUNHAP`);
+            let res = await pool.request().query(query);
             return res.recordset;
         } catch (err) {
             console.log('Lỗi: ' + err);
@@ -41,15 +47,23 @@ class Receipt {
         }
     }
 
-    async getDetailReceipts(mapn) {
+    async getDetailReceipts(mapn, reqQuery) {
         try {
+            let query = `
+            SELECT CT.ID, CT.MASP, CT.SOLUONG, CT.GIAVON, SP.TENSP
+            FROM CTPHIEUNHAP CT
+            JOIN SANPHAM SP ON CT.MASP = SP.MASP
+            WHERE MAPN = @MAPN
+            `;
+
+            if (reqQuery.hasOwnProperty('_sort')) {
+                query += ` ORDER BY ${reqQuery.column} ${reqQuery.type}`;
+            }
+
             let pool = await sql.connect(config);
             let res = await pool.request()
                 .input('MAPN', sql.Int, mapn)
-                .query(`SELECT CT.ID, CT.MASP, CT.SOLUONG, CT.GIAVON, SP.TENSP
-                FROM CTPHIEUNHAP CT
-                JOIN SANPHAM SP ON CT.MASP = SP.MASP
-                WHERE MAPN = @MAPN`);
+                .query(query);
             return res.recordset;
         } catch (err) {
             console.log('Lỗi: ' + err);

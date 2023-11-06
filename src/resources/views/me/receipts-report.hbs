@@ -1,0 +1,73 @@
+<form class="mt-4" name="container-form">
+  <div>
+    <h3>Thống kê phiếu nhập</h3>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="startdate">Ngày bắt đầu</label>
+              <input type="date" class="form-control" id="startdate" name="startdate" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="enddate">Ngày kết thúc</label>
+              <input type="date" class="form-control" id="enddate" name="enddate" required>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="product">Chọn sản phẩm</label>
+              <select class="form-control" id="MASP" name="MASP" required="required">
+                <option value="0">-- Tất cả sản phẩm --</option>
+                {{#each product}}
+                <option value="{{this.MASP}}">{{this.MASP}} - {{this.TENSP}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitButton">Xác nhận</button>
+        <div class="table-responsive">
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Ngày tạo</th>
+                <th scope="col">Mã sản phẩm</th>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Giá vốn</th>
+                <th scope="col">Giá bán</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each receiptsReport}}
+              <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.THOIGIAN}}</td>
+                <td>{{this.MASP}}</td>
+                <td>{{this.TENSP}}</td>
+                <td>{{this.SOLUONG}}</td>
+                <td>{{this.GIAVON}}</td>
+                <td>{{this.GIABAN}}</td>
+              </tr>
+              {{else}}
+              <tr>
+                <td colspan="7" class="text-center">
+                  Không có dữ liệu
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</form>

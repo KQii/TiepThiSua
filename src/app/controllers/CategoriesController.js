@@ -8,7 +8,7 @@ class CategoriesController {
         try {
             const MALOAI = req.params.MALOAI;
             const category = await Category.getCategoriesByMALOAI(MALOAI);
-            res.render('category/edit', { category });
+            res.render('category/edit', { category, name: req.user.TENTK, role: req.user.ROLE });
         } catch (err) {
             next(err);
         }
@@ -19,7 +19,7 @@ class CategoriesController {
         try {
             const MALOAI = req.params.MALOAI;
             const product = await Product.getAllProductsByMALOAI(MALOAI);
-            res.render('products/show', { product });
+            res.render('products/show', { product, name: req.user.TENTK, role: req.user.ROLE });
         } catch (error) {
             next(error);
         }
@@ -28,7 +28,7 @@ class CategoriesController {
     // [GET] /category/create
     async create(req, res, next) {
         try {
-            res.render('category/create');
+            res.render('category/create', { name: req.user.TENTK, role: req.user.ROLE });
         } catch (error) {
             next(error);
         }

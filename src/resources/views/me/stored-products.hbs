@@ -77,7 +77,7 @@
       </tr>
       {{else}}
       <tr>
-        <td colspan="5" class="text-center">
+        <td colspan="7" class="text-center">
           Bạn chưa tạo sản phẩm nào!
           <a href="/products/create">Tạo sản phẩm mới</a>
         </td>
@@ -85,30 +85,6 @@
       {{/each}}
     </tbody>
   </table>
-
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous" onclick="goToPage('previous')">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="sr-only">Previous</span>
-        </a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(1)">1</a></li>
-      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(2)">2</a></li>
-      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(3)">3</a></li>
-      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(4)">4</a></li>
-      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(5)">5</a></li>
-      <li class="page-item"><a class="page-link" href="#" onclick="goToPage(6)">6</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next" onclick="goToPage('next')">
-          <span aria-hidden="true">&raquo;</span>
-          <span class="sr-only">Next</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-
 </form>
 
 {{!-- Update hidden form --}}
@@ -200,56 +176,4 @@
       }
     }
   });
-
-  function goToPage(page) {
-    var currentUrl = window.location.href;
-    var newUrl;
-
-    if (page === 'previous') {
-      // Xử lý trang trước đó
-      newUrl = getPreviousPageUrl(currentUrl);
-    } else if (page === 'next') {
-      // Xử lý trang kế tiếp
-      newUrl = getNextPageUrl(currentUrl);
-    } else {
-      // Xử lý trang cụ thể
-      newUrl = getPageUrl(currentUrl, page);
-    }
-
-    window.location.href = newUrl;
-  }
-
-  function getPreviousPageUrl(currentUrl) {
-    // Xử lý URL để lấy trang trước đó
-    // Ví dụ: https://example.com?page=2 => https://example.com?page=1
-    var url = new URL(currentUrl);
-    var searchParams = new URLSearchParams(url.search);
-    var currentPage = parseInt(searchParams.get('page')) || 1;
-    var previousPage = Math.max(currentPage - 1, 1);
-    searchParams.set('page', previousPage.toString());
-    url.search = searchParams.toString();
-    return url.toString();
-  }
-
-  function getNextPageUrl(currentUrl) {
-    // Xử lý URL để lấy trang kế tiếp
-    // Ví dụ: https://example.com?page=2 => https://example.com?page=3
-    var url = new URL(currentUrl);
-    var searchParams = new URLSearchParams(url.search);
-    var currentPage = parseInt(searchParams.get('page')) || 1;
-    var nextPage = currentPage + 1;
-    searchParams.set('page', nextPage.toString());
-    url.search = searchParams.toString();
-    return url.toString();
-  }
-
-  function getPageUrl(currentUrl, page) {
-    // Xử lý URL để lấy trang cụ thể
-    // Ví dụ: https://example.com?page=1 => https://example.com?page=2
-    var url = new URL(currentUrl);
-    var searchParams = new URLSearchParams(url.search);
-    searchParams.set('page', page.toString());
-    url.search = searchParams.toString();
-    return url.toString();
-  }
 </script>

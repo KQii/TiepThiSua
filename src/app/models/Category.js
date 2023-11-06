@@ -3,10 +3,16 @@ const sql = require('mssql');
 
 class Category {
 
-    async getCategories() {
+    async getCategories(reqQuery) {
         try {
+            let query = `SELECT * FROM LOAISP`;
+
+            if (reqQuery.hasOwnProperty('_sort')) {
+                query += ` ORDER BY ${reqQuery.column} ${reqQuery.type}`;
+            }
+
             let pool = await sql.connect(config);
-            let res = await pool.request().query('SELECT * FROM LOAISP');
+            let res = await pool.request().query(query);
             return res.recordset;
         } catch (err) {
             console.log(' Error :' + err);

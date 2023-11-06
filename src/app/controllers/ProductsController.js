@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
 const Receipt = require('../models/Receipt');
+const Cart = require('../models/Cart');
 
 class ProductsController {
 
@@ -8,15 +9,17 @@ class ProductsController {
     async getList(req, res, next) {
         try {
             const product = await Product.getAllProducts();
-            res.render('products/show', { product });
+            const cart = await Cart.getCartByTENTK(req.user.TENTK);
+            const productIdsInCart = cart.map(item => item.MASP);
+
+            product.forEach(item => {
+                item.isInCart = productIdsInCart.includes(item.MASP);
+            });
+            
+            res.render('products/show', { product, cart, name: req.user.TENTK, role: req.user.ROLE });
         } catch (err) {
             next(err);
         }
-
-        // catch (err) {
-        //     console.log(err);
-        //     res.send('Đã xảy ra lỗi khi lấy danh sách sản phẩm');
-        // }
     }
 
     // [GET]/products/:MASP/edit
@@ -25,7 +28,7 @@ class ProductsController {
             const MASP = req.params.MASP;
             const product = await Product.getProductsByMASP(MASP);
             const category = await Category.getCategories();
-            res.render('products/edit', { product, category });
+            res.render('products/edit', { product, category, name: req.user.TENTK, role: req.user.ROLE });
         } catch (err) {
             next(err);
         }
@@ -37,7 +40,7 @@ class ProductsController {
         try {
             const MASP = req.params.MASP;
             const product = await Product.getProductsByMASP(MASP);
-            res.render('products/detail', { product });
+            res.render('products/detail', { product, name: req.user.TENTK, role: req.user.ROLE });
         } catch (err) {
             next(err);
         }
@@ -47,8 +50,8 @@ class ProductsController {
     async create(req, res, next) {
         try {
             const product = await Product.createProducts();
-            const category = await Category.getCategories();
-            res.render('products/create', { product, category })
+            const category = await Category.getCategories(req.query);
+            res.render('products/create', { product, category, name: req.user.TENTK, role: req.user.ROLE })
         } catch (err) {
             next(err);
         }
@@ -81,7 +84,7 @@ class ProductsController {
             await Receipt.createReceiptDetails(mapn, masp, soluong, giavon);
 
             await Product.updateQuantity(masp, soluong);
-            
+
             res.redirect('/me/stored/products');
         } catch (error) {
             console.error('Lỗi khi thêm dữ liệu:', error);
@@ -98,6 +101,17 @@ class ProductsController {
         } catch (error) {
             console.error('Lỗi khi thêm dữ liệu:', error);
             res.status(500).send('Lỗi khi thêm dữ liệu');
+        }
+    }
+
+    // [POST] products/add-to-cart
+    async addToCart(req, res, next) {
+        try {
+            const { masp, soluong } = req.body;
+            await Cart.add(masp, soluong, req.user.TENTK);
+            res.redirect('/products');
+        } catch (error) {
+            next(error);
         }
     }
 

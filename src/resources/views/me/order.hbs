@@ -1,6 +1,6 @@
 <form class="mt-4" name="container-form" method="POST" action="">
   <div>
-    <h3>Danh sách đơn hàng</h3>
+    <h3>Đơn hàng của bạn</h3>
   </div>
 
   <table class="table mt-4">
@@ -12,18 +12,11 @@
           {{{sortable 'MADH' _sort}}}
         </th>
         <th scope="col">
-          Mã khách hàng
-          {{{sortable 'MAKH' _sort}}}
-        </th>
-        <th scope="col">
           Ngày tạo
           {{{sortable 'NGAYDH' _sort}}}
         </th>
         <th scope="col">
-          Địa chỉ
-        </th>
-        <th scope="col">
-          Trạng thái
+          Thanh toán
           {{{sortable 'TRANGTHAI' _sort}}}
         </th>
         <th scope="col">
@@ -34,22 +27,26 @@
       </tr>
     </thead>
     <tbody>
-      {{#each orders}}
+      {{#each order}}
       <tr>
         <th scope="row">{{sum @index 1}}</th>
         <td>{{this.MADH}}</td>
-        <td>{{this.MAKH}}</td>
         <td>{{this.NGAYDH}}</td>
-        <td>{{this.DIACHI}}</td>
-        <td>{{this.TRANGTHAI}}</td>
+        <td>
+          {{#if this.TRANGTHAI}}
+          <i class="fa-solid fa-square-check"></i>
+          {{else}}
+          <i class="fa-solid fa-square-xmark"></i>
+          {{/if}}
+        </td>
         <td>{{this.TONGTIEN}}</td>
         <td>
-          <a href="/me/stored/orders/{{this.MADH}}" class="btn btn-link">Chi tiết đơn hàng</a>
+          <a href="/me/order/{{this.MADH}}" class="btn btn-link">Chi tiết đơn hàng</a>
         </td>
       </tr>
       {{else}}
       <tr>
-        <td colspan="5" class="text-center">
+        <td colspan="6" class="text-center">
           Chưa có đơn hàng nào được tạo!
         </td>
       </tr>

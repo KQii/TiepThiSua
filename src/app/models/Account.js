@@ -2,10 +2,16 @@ var config = require('../../config/db/index');
 const sql = require('mssql');
 
 class Account {
-    async getAccounts() {
+    async getAccounts(reqQuery) {
         try {
+            let query = `SELECT * FROM TAIKHOAN`;
+
+            if (reqQuery.hasOwnProperty('_sort')) {
+                query += ` ORDER BY ${reqQuery.column} ${reqQuery.type}`;
+            }
+
             let pool = await sql.connect(config);
-            let res = await pool.request().query('SELECT * FROM TAIKHOAN');
+            let res = await pool.request().query(query);
             return res.recordset;
         } catch (err) {
             console.log(' Error :' + err);

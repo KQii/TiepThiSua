@@ -1,0 +1,151 @@
+<form class="mt-4" name="container-form" method="POST" action="">
+  <div>
+    <h3>Giỏ hàng</h3>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">
+          Tên sản phẩm
+        </th>
+        <th scope="col">
+          Số lượng
+        </th>
+        <th scope="col">
+          Đơn giá
+        </th>
+        <th scope="col">
+          Thành tiền
+        </th>
+        <th scope="col" colspan="1"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each cart}}
+      <tr>
+        <input type="hidden" value="{{this.ID}}" name="cartIDs[]">
+        <input type="hidden" value="{{this.MASP}}" name="productIDs[]">
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.TENSP}}</td>
+        <td class="col-3">
+          <div class="form-group mb-2 col-5">
+            <label for="quantity" class="sr-only"></label>
+            <input type="number" class="form-control" value="{{this.SOLUONG}}" min="1" max="{{this.TON}}" id="quantity"
+              name="soluong[]" onchange="updateSubtotal(this)" required>
+          </div>
+        </td>
+        <td class="price">{{this.GIABAN}}</td>
+        <td class="subtotal" onchange="updateTotal()">{{this.THANHTIEN}}</td>
+        <td>
+          <a href="#" class="btn btn-link" data-toggle="modal" data-id="{{this.ID}}"
+            data-target="#delete-product-from-cart-modal">Xóa</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="6" class="text-center">
+          Chưa có sản phẩm nào trong giỏ hàng
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="text-right" style="font-size: large;"><b>Tổng cộng:</b></td>
+        <td id="total" class="text-bold"></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="text-right">
+    <button type="button" class="btn btn-primary" id="btn-save-changes">Lưu thay đổi</button>
+    <button type="button" class="btn btn-warning ml-1" id="btn-order">Đặt hàng</button>
+  </div>
+</form>
+
+<form id="delete-product-from-cart-form" method="POST" action="">
+  <input type="hidden" name="ID">
+</form>
+
+<div class="modal fade" id="delete-product-from-cart-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa sản phẩm</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xóa sản phẩm này chứ?
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-product-from-cart" type="button" class="btn btn-danger">Xóa bỏ</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var cartID;
+    var deleteForm = document.forms['delete-product-from-cart-form'];
+
+    // var containerForm = document.forms['container-form'];
+    var containerForm = $('form[name="container-form"]');
+    var btnDeleteProductFromCart = document.getElementById('btn-delete-product-from-cart');
+    var checkboxAll = $('#checkbox-all');
+    var productItemCheckbox = $('input[name="cartIDs[]"]');
+    var checkAllSubmitBtn = $('.btn-check-all-submit')
+    var btnSaveChanges = document.getElementById('btn-save-changes');
+    var btnOrder = document.getElementById('btn-order')
+
+    updateTotal();
+
+    btnSaveChanges.onclick = function () {
+      containerForm.attr('action', 'cart/save-changes');
+      containerForm.submit();
+    };
+
+    btnOrder.onclick = function () {
+      containerForm.attr('action', 'cart/create-order');
+      containerForm.submit();
+    };
+
+    // When dialog confirm show
+    $('#delete-product-from-cart-modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      // Send data with the button when clicked
+      cartID = button.data('id');
+    })
+
+    // When delete product button in dialog clicked
+    btnDeleteProductFromCart.onclick = function () {
+      deleteForm.action = 'cart/' + cartID + '/delete?_method=PATCH';
+      deleteForm.elements['ID'].value = cartID;
+      deleteForm.submit();
+    }
+  });
+
+  function updateSubtotal(input) {
+    var quantity = parseInt(input.value);
+    var price = parseFloat(input.closest('tr').querySelector('.price').innerText);
+    var subtotal = quantity * price;
+    input.closest('tr').querySelector('.subtotal').innerText = subtotal;
+    updateTotal();
+  }
+
+  function updateTotal() {
+    var total = 0;
+    var subtotals = document.getElementsByClassName('subtotal');
+    for (var i = 0; i < subtotals.length; i++) {
+      total += parseFloat(subtotals[i].textContent);
+    }
+    document.getElementById('total').textContent = total;
+  }
+
+</script>

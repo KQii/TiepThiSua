@@ -1,50 +1,133 @@
-<form class="mt-4" name="container-form" method="POST" action="">
+<form class="mt-4" name="container-form">
   <div>
     <h3>Báo cáo doanh thu và lợi nhuận</h3>
   </div>
 
-  <table class="table mt-4">
-    <thead>
-      <tr>
-        <th scope="col">
-          Ngày bắt đầu
-        </th>
-        <th scope="col">
-          Ngày kết thúc
-        </th>
-        <th scope="col">
-          Doanh thu
-        </th>
-        <th scope="col">
-          Tổng vốn
-        </th>
-        <th scope="col">
-          Lợi nhuận
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each orders}}
-      <tr>
-        <th scope="row">{{sum @index 1}}</th>
-        <td>{{this.MADH}}</td>
-        <td>{{this.MAKH}}</td>
-        <td>{{this.NGAYDH}}</td>
-        <td>{{this.DIACHI}}</td>
-        <td>{{this.TRANGTHAI}}</td>
-        <td>{{this.TONGTIEN}}</td>
-        <td>
-          <a href="/me/stored/orders/{{this.MADH}}" class="btn btn-link">Chi tiết đơn hàng</a>
-        </td>
-      </tr>
-      {{else}}
-      <tr>
-        <td colspan="5" class="text-center">
-          Chưa có đơn hàng nào được tạo!
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="startdate">Ngày bắt đầu</label>
+              <input type="date" class="form-control" id="startdate" name="startdate">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="enddate">Ngày kết thúc</label>
+              <input type="date" class="form-control" id="enddate" name="enddate">
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitButton">Xác nhận</button>
+        <div class="table-responsive">
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Ngày bắt đầu</th>
+                <th scope="col">Ngày kết thúc</th>
+                <th scope="col">Doanh thu</th>
+                <th scope="col">Tổng vốn</th>
+                <th scope="col">Lợi nhuận</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each report}}
+              <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.NGAYBATDAU}}</td>
+                <td>{{this.NGAYKETTHUC}}</td>
+                <td>{{this.DOANHTHU}}</td>
+                <td>{{this.TONGVON}}</td>
+                <td>{{this.LOINHUAN}}</td>
+              </tr>
+              {{else}}
+              <tr>
+                <td colspan="6" class="text-center">
+                  Thông tin báo cáo sẽ xuất hiện ở đây!
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="container row">
+      <h5>Tổng số đơn hàng: {{totalOrder.[0].TOTAL_ORDER}}</h5>
+    </div>
+    <div class="container row mt-4">
+      <h5>Bảng thống kê những sản phẩm đã bán được trong khoảng thời gian</h5>
+      <table class="table table-bordered mt-2">
+        <thead>
+          <tr>
+            <th scope="col">Mã sản phẩm</th>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Số lượng bán ra</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each soldProduct}}
+          <tr>
+            <td>{{this.MASP}}</td>
+            <td>{{this.TENSP}}</td>
+            <td>{{this.TOTAL_SOLD}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="container row mt-4">
+      <h5>Bảng thống kê những sản phẩm bán chạy nhất trong khoảng thời gian</h5>
+      <table class="table table-bordered mt-2">
+        <thead>
+          <tr>
+            <th scope="col">Mã sản phẩm</th>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Số lượng bán ra</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each mostSoldProduct}}
+          <tr>
+            <td>{{this.MASP}}</td>
+            <td>{{this.TENSP}}</td>
+            <td>{{this.TOTAL_SOLD}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="container row mt-4">
+      <h5>Bảng thống kê những tài khoản mua nhiều nhất trong khoảng thời gian</h5>
+      <table class="table table-bordered mt-2">
+        <thead>
+          <tr>
+            <th scope="col">Tên tài khoản</th>
+            <th scope="col">Tên khách hàng</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col">Email</th>
+            <th scope="col">Giới tính</th>
+            <th scope="col">Ngày sinh</th>
+            <th scope="col">Số lần mua</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each customer}}
+          <tr>
+            <td>{{this.SDT1}}</td>
+            <td>{{this.TEN}}</td>
+            <td>{{this.DIACHI}}</td>
+            <td>{{this.EMAIL1}}</td>
+            <td>{{this.GIOITINH}}</td>
+            <td>{{this.NGAYSINH}}</td>
+            <td>{{this.KHACHHANG_COUNT}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </form>
